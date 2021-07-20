@@ -1,0 +1,73 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+     <title>TI InfoSec Cloud Questionnaire</title>
+</h:head>
+<body>
+<h:form>
+    <p:growl id="message"/>
+<p:layout style="min-width:1000px;min-height:200px;" fullPage="true">
+                <p:layoutUnit position="north" size="70"  >
+                      <h:graphicImage value="/images/disc_logo.PNG" width="170" height="50" />
+
+                </p:layoutUnit>
+                <p:layoutUnit position="west" resizable="false" size="300" minSize="40" maxSize="200">
+            </p:layoutUnit>
+
+   <p:layoutUnit position="center">
+        <p:panel header="Registration">
+              <p:panelGrid columns="3" columnClasses="label,value">
+                  
+                  <p:outputLabel value="First Name"/>
+                  <h:inputText id="fname" required="true" value="#{main.FName}" validatorMessage="Names do not contain numbers"  >
+                      <f:validateRegex pattern="[a-zA-Z]+$"/>
+                  </h:inputText>
+                  <p:message for="fname"/>
+                      
+
+                  <p:outputLabel value="Last Name"/>
+                  <h:inputText id="lname" required="true" value="#{main.LName}" validatorMessage="Last Names do not contain numbers">
+                      <f:validateRegex pattern="[a-zA-Z]+$"/>
+                  </h:inputText>
+                  <p:message for="lname"/>
+
+                  <p:outputLabel value="Your Email Address"/>
+                  <h:inputText id="mails" required="true"  value="#{main.email}"/>
+                  <p:message for="mails"/>
+
+                  <p:outputLabel value="Mobile Number"/>
+                  <h:inputText id="mobil" required="true" value="#{main.mobile}"/>
+                  <p:message for="mobil"/>
+
+                  <p:outputLabel value="Company Name"/>
+                  <h:inputText id="company" required="true" value="#{main.companyName}"/>
+                  <p:message for="company"/>
+                  
+                  <p:outputLabel value="Choose a User Name"/>
+                  <h:inputText id="user" required="true" value="#{main.userName}"/>
+                  <p:message for="user"/>
+
+                  <p:outputLabel value="Choose a password"/>
+                  <p:password value="#{main.password}" id="pwd1" match="pwd2" required="true" maxlength="100" validatorMessage="Passwords must match and be longer than 8 characters" >
+                      <f:validateLength minimum="8"/>
+                  </p:password>
+                  <p:message for="pwd1"/>
+                  
+                  <p:outputLabel value="Confirm password"/>
+                  <p:password value="#{main.password}" id="pwd2" required="true"/>
+                    <p:message for="pwd2"/>
+
+                  <p:commandButton ajax ="false" value="Request Registration" actionListener="#{main.processActualRegistration()}" update="message"  />
+                  <p:commandButton ajax="false" value="Return" action="#{main.processReturnToIndex()}"/>
+              </p:panelGrid>
+        </p:panel>
+   </p:layoutUnit>
+</p:layout>
+</h:form>
+</body>
+</html>

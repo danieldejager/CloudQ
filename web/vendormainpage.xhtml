@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+       xmlns:pe="http://primefaces.org/ui/extensions"
+       xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+     <title>TI InfoSec Cloud Questionnaire</title>
+</h:head>
+<body>
+    <h:form>
+    <p:layoutUnit position="north" size="70"  >
+                      <h:graphicImage value="/images/disc_logo.PNG" width="170" height="50" />
+
+                </p:layoutUnit>
+                <p:layoutUnit position="west" resizable="false" size="300" minSize="40" maxSize="200">
+                    <p:splitButton value ="Hello #{administratorbean.user}">
+                           <p:menuitem value="Change Password"/>
+                           <p:menuitem value="Log Out" action="#{loginbean.logout()}"/>
+                       </p:splitButton>
+                        <br/>
+                    <p:spacer height="5"></p:spacer>
+                    <p:layoutUnit position="center"         resizable="false">
+                        <p:accordionPanel>
+                            <p:tab title="Introduction and Purpose">
+                                <h:outputText value="The purpose of this questionnaire covers the required steps and standards that must be in place in order for a Cloud Provider to be approved by IT Information Security and Compliance.          This site will detail the process including the SLA's that need to be adhered to manage the expectation of the cloud provider."/>
+                            </p:tab>
+                            <p:tab title="Internal Stakeholders">
+                                <h:outputText value="TI CYBERSEC and Internal Compliance"/>
+                            </p:tab>
+                            <p:tab title="External Stakeholders">
+                                <h:outputText value="The Cloud Provider"/>
+                            </p:tab>
+                            <p:tab title="Internal Approval Process - TI CyberSec">
+                                <h:outputText value="An internal approval process exists between TI CyberSec as well as Compliance"/>
+                                <p:spacer/>
+                                <h:outputText value="TI CyberSec reviews all supporting documentation , if there are further questions the cloud provider will be contacted. A meeting will be setup should the need arise.    "/>
+                                <p:spacer/>
+                                <h:outputText value="A decision will be made on the request within 30 days of receiving request."/>
+                                <p:spacer/>
+                                <h:outputText value="TI CyberSec will communicate the decision to the requesting Business Unit."/>
+                            </p:tab>
+                            <p:tab title="Internal Review Process - Compliance">
+                                <h:outputText value="Compliance will review all supporting documentation, if there are further questions the cloud provider will be contacted - A meeting must be set up should the need arise. "/>
+                                <p:spacer/>
+                                <h:outputText value="Compliance will approve or decline the request within 10 working days.   "/>
+                                <p:spacer/>
+                                <h:outputText value="Compliance will communicate the decision to the TI CyberSec Team"/>
+                            </p:tab>
+                        </p:accordionPanel>
+                       
+                    </p:layoutUnit>
+                   
+                        
+
+       
+   </p:layoutUnit>
+         <div align="center">
+             
+             <p:commandButton value="Start the Assessment" ajax="true" actionListener="#{startAssessmentBean.processStartAssessment}"/>
+         </div>
+    </h:form>
+</body>
+</html>
+
+       

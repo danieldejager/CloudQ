@@ -1,0 +1,91 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+<h:head>
+     <title>TI InfoSec Cloud Questionnaire</title>
+</h:head>
+<body>
+<h:form id="frm">
+    <p:growl id="message"/>
+<p:layout style="min-width:1000px;min-height:200px;" fullPage="true">
+     <p:layoutUnit position="north" size="70"  >
+                      <h:graphicImage value="/images/disc_logo.PNG" width="170" height="50" />
+     </p:layoutUnit>
+            
+                <p:layoutUnit position="west" resizable="false" size="300" minSize="40" maxSize="200">
+                    <p:splitButton value ="Hello #{administratorbean.user}">
+                           <p:menuitem value="Change Password"/>
+                           <p:menuitem value="Log Out" action="#{loginbean.logout()}"/>
+                       </p:splitButton>
+                        <br/>
+                    <p:spacer height="5"></p:spacer>       
+                </p:layoutUnit>
+
+<p:layoutUnit position="center">
+    <f:facet name="header">Information Required from the requesting Business Unit</f:facet>
+    <p:wizard flowListener="#{highlevelquestionsbean.onFlowProcess}">
+        <p:tab  title="Vendor">
+            <p:panel header="Vendor Information">
+            <p:messages/>
+            <p:panelGrid columnClasses="label,value" columns="2">
+                <h:outputText value="**Who is the Cloud Provider and describe the solution or service(s)sought"/>
+                <h:inputTextarea  required="true" rows="7" cols="66"   value="#{highlevelquestionsbean.responses.vendorinformation}"/>
+            </p:panelGrid>
+            </p:panel>
+        </p:tab>
+        <p:tab title="Justification">
+            <p:panel header="Motoviation for using the Cloud Provider">
+            <p:panelGrid columnClasses="label,value" columns="2">
+                <h:outputText value="**Please provide a full, detailed description of all data that will be processed, transmitted or stored within the service:"/>
+                <h:inputTextarea required="true" rows="7" cols="66" value="#{highlevelquestionsbean.responses.justification}"/>
+            </p:panelGrid>
+            </p:panel>
+        </p:tab>
+        <p:tab title="Non-Disclosure">
+            <p:panel header="Mutual NDA">
+            <p:panelGrid columnClasses="label,value" columns="2">
+                <h:outputText value="Please confirm that a NDA is in place"/>
+                <p:selectOneMenu value="#{highlevelquestionsbean.responses.NDA}">
+                    <f:selectItem itemLabel="No" itemValue="No"/>
+                    <f:selectItem itemLabel="Yes" itemValue="Yes"/>
+                </p:selectOneMenu>
+            </p:panelGrid>
+            </p:panel>
+        </p:tab>
+        <p:tab title="Technical Diagram">
+            <p:panel header="Architecture  (NOTE: ONLY PDF files are allowed">
+            <p:panelGrid columnClasses="label,value" columns="2">
+                <h:outputText value="Please attach a technical diagram that includes data flows and security zones"/>
+                <p:fileUpload required="true"  fileUploadListener="#{highlevelquestionsbean.handleFileUpload}"  value="#{highlevelquestionsbean.responses.filepath}" fileLimit="1"  mode="advanced" dragDropSupport="true"
+                          update="message" sizeLimit="5000000" allowTypes="/(\.|\/)(pdf)$/" />
+            </p:panelGrid>
+            </p:panel>
+        </p:tab>
+        
+        <p:tab title="Confirmation">
+            <p:panel header="Confirm that all the information provided is correct">
+                <p:panelGrid columnClasses="label, value" columns="2">
+                    <h:outputText value="Vendor Information"/>
+                    <h:outputText value="#{highlevelquestionsbean.responses.vendorinformation}"  styleClass="outputLabel" />
+                    
+                    <h:outputText value="Justification"/>
+                    <h:outputText value="#{highlevelquestionsbean.responses.justification}" styleClass="outputLabel"  />
+                    
+                    <h:outputText value="Non-Disclosure Provided"/>
+                    <h:outputText value="#{highlevelquestionsbean.responses.NDA}"  styleClass="outputLabel" />
+                    
+                    <h:outputText value="Technical Diagram"/>
+                    <h:outputText value="#{highlevelquestionsbean.filename}" styleClass="outputLabel"/>
+                </p:panelGrid>
+                <p:commandButton  action="#{highlevelquestionsbean.ProcessHighLevelDescriptionData(e)}" ajax="false" value="Submit" update="message" icon="fa fa-save" />
+            </p:panel>
+        </p:tab>
+    </p:wizard>
+</p:layoutUnit>
+</p:layout>
+</h:form>
+</body>
+</html>

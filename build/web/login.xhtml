@@ -1,0 +1,48 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+       xmlns:pe="http://primefaces.org/ui/extensions">
+<h:head>
+     <title>TI InfoSec Cloud Questionnaire</title>
+</h:head>
+<body>
+<h:form>
+    <p:growl id="message"/>
+<p:layout style="min-width:1000px;min-height:200px;" fullPage="true">
+                <p:layoutUnit position="north" size="70"  >
+                      <h:graphicImage value="/images/disc_logo.PNG" width="170" height="50" />
+
+                </p:layoutUnit>
+                
+
+   <p:layoutUnit position="center">
+       <div align="center">
+       <h:panelGrid columns="3" columnClasses="" cellpadding="5">
+           <f:facet name="header">Login Credentials</f:facet>
+           <h:outputLabel for="username" value="Username :"/>
+           <p:inputText id="username" label="username" value="#{loginbean.username}"  />
+           <h:message for="username"></h:message>
+
+           <h:outputLabel for="password" value="Password :"/>
+           <p:password id="password" label="password" value="#{loginbean.password}" />
+           <h:message for="password"></h:message>
+
+           <f:facet name="footer">
+               <p:commandButton value="Login" ajax="false" icon="ui-icon-circle-check" action="#{loginbean.processLoginClick}"/>
+               <p:spacer width="20"/>
+               <p:commandButton value="Register" ajax="false" icon="ui-icon-mail-closed" action="#{main.processRegistration()}"/>
+           </f:facet>
+
+        </h:panelGrid>
+        </div>
+       
+      
+
+   </p:layoutUnit>
+</p:layout>
+      </h:form>
+    </body>
+</html>

@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+<h:head>
+     <title>Assessment Questions</title>
+        
+</h:head>
+<body>
+<h:form id="frm" enctype="multipart/form-data">
+<p:growl id="message"/>
+<p:layout style="min-width:1000px;min-height:200px;" fullPage="true">
+                <p:layoutUnit position="north" size="70"  >
+                      <h:graphicImage value="/images/disc_logo.PNG" width="170" height="50" />
+
+                </p:layoutUnit>
+            <p:layoutUnit position="west" resizable="false" size="300" minSize="40" maxSize="200">
+
+                       <p:commandButton value ="Hello #{administratorbean.user}">
+                            
+                       </p:commandButton>
+                        <br/>
+                    <p:spacer height="5"></p:spacer>
+                       
+            </p:layoutUnit>
+
+    <p:layoutUnit position="center">
+        <p:panel id="questions" header="Area : #{detailassessment.question.category}">
+        <p:panelGrid id="question_panel"  layout="grid" columns="2">
+            <p:outputLabel id="questiontoanswer" value="#{detailassessment.question.question}">
+            <p:tooltip for="questiontoanswer" value="#{detailassessment.question.guidance}"/>
+        </p:outputLabel>
+            <p:inputTextarea required="true" rows="7" cols="66" value="#{detailassessment.answer.questionAnswer}"/>
+        
+            <p:outputLabel rendered="#{detailassessment.question.evidencerequired eq 'Yes'}" id ="evidence" value="Choose a file to upload as evidence">
+                <p:tooltip for="evidence" value="A file can be uploaded for addtional context"/> 
+            </p:outputLabel>
+            <p:fileUpload rendered="#{detailassessment.question.evidencerequired eq 'Yes'}" update="message" mode="advanced" fileUploadListener="#{detailassessment.handleFileUpload}" allowTypes="/(\.|\/)(pdf)$/" sizeLimit="10000000"/> 
+             
+            
+            
+            
+            <p:outputLabel rendered="#{detailassessment.question.elaboration eq 'Yes'}" id ="elaboration" value="Please use this area to elaborate on your answer">
+                    <p:tooltip for="elaboration" value="Use this area to elaborate on the answer provided. Add more detail to the answer"/>
+            </p:outputLabel>
+            
+            <p:inputTextarea rendered="#{detailassessment.question.elaboration eq 'Yes'}"  required="false" rows="7" cols="66" value="#{detailassessment.answer.questionElaboration}" />
+            
+            <p:commandButton value="Next" icon="fa fa-hand-o-right" ajax="true" actionListener="#{detailassessment.getNextQuestion}">
+            <f:ajax render="@all" />
+            </p:commandButton>
+            
+            <p:commandButton value="Exit Assessnent" icon="fa fa-sign-out" action="#{detailassessment.handleExit}" />
+             </p:panelGrid>
+        </p:panel>
+    </p:layoutUnit>
+    
+</p:layout>
+    
+</h:form>
+</body>
+</html>

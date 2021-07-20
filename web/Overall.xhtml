@@ -1,0 +1,247 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>TI InfoSec Cloud Questionnaire</title>
+    </h:head>
+
+<body>
+<h:form>
+<p:growl id="message"/>
+<p:layout style="min-width:1000px;min-height:200px;" fullPage="true">
+                <p:layoutUnit position="north" size="70"  >
+                      <h:graphicImage value="/images/disc_logo.PNG" width="170" height="50" />
+
+                </p:layoutUnit>
+                <p:layoutUnit position="west" resizable="false" size="300" minSize="40" maxSize="200">
+                     <p:splitButton value ="Hello #{administratorbean.user}">
+                         <p:menuitem value="Change Password" action="#{loginbean.processChangePassword()}" />
+                           <p:menuitem value="Log Out" action="${loginbean.logout()}" />
+                       </p:splitButton><br/>
+                    <p:spacer height="5"></p:spacer>
+                    <p:panelMenu>
+                        <p:submenu label="Evaluations">
+                            <p:menuitem value="Questionnare Status" icon="fa fa-american-sign-language-interpreting" outcome="AssessmentStatus" />
+                            <p:menuitem value="Completed Questionnaires" icon="fa fa-flag-checkered" outcome="completedQuestionnaires"/>
+                        </p:submenu>
+                    </p:panelMenu>
+                        <p:panelMenu>
+                            <p:submenu label="Dashboards" icon="ui-icon-home">
+                                <p:menuitem value="Overall" icon="fa fa-tachometer" outcome="Overall" />
+                                <p:menuitem value="Findings" icon="fa fa-database" outcome="showFindings" />
+                            </p:submenu>
+                        </p:panelMenu>
+                        <p:panelMenu>
+                            <p:submenu label="Reports">
+                                <p:menuitem value="Assessment Reports" icon="fa fa-newspaper-o" outcome="findingReports"/>
+                        </p:submenu>
+                        </p:panelMenu>
+                        <p:panelMenu>
+                            <p:submenu  label="Administration">
+                                <p:menuitem value="Registrations" icon="fa fa-cogs" action="#{administratorbean.processRegistrationManagementClick()}" />
+                                <p:menuitem value="Vendors" icon="fa fa-cloud" outcome="managevendor" />
+                                 <p:menuitem value="Assessment Questions" icon="fa fa-question-circle-o" outcome="AssessmentQuestions"/>
+                                 <p:menuitem value="Question Category Weightings" icon="fa fa-anchor" outcome="CategoryWeights"/>
+                                 <p:menuitem value="User Administration" icon="fa fa-user" outcome="administration-users"/>
+                            </p:submenu>
+                            
+                            
+                        </p:panelMenu>
+            </p:layoutUnit>
+
+   <p:layoutUnit position="center">
+       
+       <p:panel header="Cloud Assessment Status" toggleOrientation="vertical" toggleable="true" >
+           <div id="overallstatus" style="max-width: 1000px; height: 400px; margin: 0 auto"></div> <br/><br/>
+       </p:panel>  
+       
+       <p:panel header="Finding Severity Breakdown" toggleOrientation="vertical" toggleable="true">
+           <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div><br/><br/>
+       </p:panel>
+     
+       <p:panel header="Finding Categories Breakdown" toggleOrientation="vertical" toggleable="true">
+           <div id="categorybreakdown" style="max-width: 1000px; height: 400px; margin: 0 auto"></div> 
+       </p:panel> 
+                    
+
+     <script type="text/javascript" src="http://code.highcharts.com/highcharts.js"></script>
+     <script type="text/javascript" src="http://code.highcharts.com/modules/exporting.js"></script>   
+     <script type="text/javascript">
+         
+     Highcharts.chart('container', {
+    chart: {
+        plotBackgroundColor: null,
+        plotBorderWidth: null,
+        plotShadow: false,
+        type: 'pie'
+    },
+    title: {
+        text: 'Overall Severities of Findings'
+    },
+    tooltip: {
+        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+    },
+    plotOptions: {
+        pie: {
+            allowPointSelect: true,
+            cursor: 'pointer',
+            dataLabels: {
+                enabled: true,
+                format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                style: {
+                   // color: (Highcharts.theme &amp;&amp; Highcharts.theme.contrastTextColor) || 'black'
+                }
+            }
+        }
+    },
+    series: [{
+        name: 'Findings',
+        colorByPoint: true,
+        data: [{
+            name: 'Critical',
+            y: #{findingsBean.totalCritical}
+        }, {
+            name: 'High',
+            y: #{findingsBean.totalHigh},
+            sliced: true,
+            selected: true
+        }, {
+            name: 'Medium',
+            y: #{findingsBean.totalMedium}
+        }, {
+            name: 'Low',
+            y: #{findingsBean.totalLow}
+        }]
+    }]
+});    
+         
+         Highcharts.chart('overallstatus', {
+    chart: {
+        type: 'bar'
+    },
+    title: {
+        text: 'Cloud Assessment Status'
+    },
+    subtitle: {
+        //text: 'Source: <a href="http://en.wikipedia.org/wiki/List_of_cities_proper_by_population">Wikipedia</a>'
+    },
+    xAxis: {
+        type: 'category',
+        labels: {
+            rotation: -45,
+            style: {
+                fontSize: '13px',
+                fontFamily: 'Verdana, sans-serif'
+            }
+        }
+    },
+    yAxis: {
+        min: 0,
+        title: {
+            text: 'Totals'
+        }
+    },
+    legend: {
+        enabled: false
+    },
+    tooltip: {
+        pointFormat: 'Total Assessment <b>{point.y:.1f}</b>'
+    },
+    series: [{
+        name: 'Status',
+        data: [
+            ['Total', #{reportsBean.totalCloudAssessmentsPerformed}],
+            ['Vendor Completed', #{reportsBean.totalCompletedCloudAssessments}],
+            ['In Progress', #{reportsBean.totalNotCompletedCloudAssessments}],
+            ['Discovery Completed', #{reportsBean.totalReportedCloudAssessments}]
+        ],
+        dataLabels: {
+            enabled: true,
+            rotation: -90,
+            color: '#FFFFFF',
+            align: 'right',
+            format: '{point.y:.1f}', // one decimal
+            y: 10, // 10 pixels down from the top
+            style: {
+                fontSize: '13px',
+                fontFamily: 'Verdana, sans-serif'
+            }
+        }
+    }]
+});
+
+     Highcharts.chart('categorybreakdown', {
+    chart: {
+        type: 'column'
+    },
+    title: {
+        text: 'Business Attribute Category Breakdown Report '
+    },
+    subtitle: {
+        //text: 'Source: <a href="http://en.wikipedia.org/wiki/List_of_cities_proper_by_population">Wikipedia</a>'
+    },
+    xAxis: {
+        type: 'category',
+        labels: {
+            rotation: -45,
+            style: {
+                fontSize: '13px',
+                fontFamily: 'Verdana, sans-serif'
+            }
+        }
+    },
+    yAxis: {
+        min: 0,
+        title: {
+            text: 'Totals'
+        }
+    },
+    legend: {
+        enabled: false
+    },
+    tooltip: {
+        pointFormat: 'Total Assessment <b>{point.y:.1f}</b>'
+    },
+    series: [{
+        name: 'Status',
+        data: [
+            ['Juristiction', #{reportsBean.juristiction}],
+            ['Confidentiality', #{reportsBean.confidentiality}],
+            ['Resillience', #{reportsBean.ressilience}],
+            ['Disaster Recovery', #{reportsBean.disasterrecovery}],
+            ['Policy', #{reportsBean.policy}],
+            ['Auditing', #{reportsBean.auditing}],
+            ['Availability', #{reportsBean.availability}],
+            ['Frameworks', #{reportsBean.frameworks}],
+            ['Authentication', #{reportsBean.authentication}],
+            ['Secure Design', #{reportsBean.securedesign}]
+        ],
+        dataLabels: {
+            enabled: true,
+            rotation: -90,
+            color: '#FFFFFF',
+            align: 'right',
+            format: '{point.y:.1f}', // one decimal
+            y: 10, // 10 pixels down from the top
+            style: {
+                fontSize: '13px',
+                fontFamily: 'Verdana, sans-serif'
+            }
+        }
+    }]
+});
+    
+    
+     </script>
+  
+   </p:layoutUnit>
+</p:layout>
+      </h:form>
+    
+
+    </body>
+</html>

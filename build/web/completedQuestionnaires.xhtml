@@ -1,0 +1,92 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+       xmlns:pe="http://primefaces.org/ui/extensions">
+<h:head>
+     <title>TI InfoSec Cloud Questionnaire</title>
+</h:head>
+<body>
+<h:form id="frm">
+<p:growl id="message"/>
+<p:layout style="min-width:1000px;min-height:200px;" fullPage="true">
+                <p:layoutUnit position="north" size="70"  >
+                      <h:graphicImage value="/images/disc_logo.PNG" width="170" height="50" />
+
+                </p:layoutUnit>
+                <p:layoutUnit position="west" resizable="false" size="300" minSize="40" maxSize="200">
+                     <p:splitButton value ="Hello #{administratorbean.user}">
+                         <p:menuitem value="Change Password" action="#{loginbean.processChangePassword()}" />
+                           <p:menuitem value="Log Out" action="${loginbean.logout()}" />
+                       </p:splitButton><br/>
+                    <p:spacer height="5"></p:spacer>
+                    <p:panelMenu>
+                        <p:submenu label="Evaluations">
+                            <p:menuitem value="Questionnare Status" icon="fa fa-american-sign-language-interpreting" outcome="AssessmentStatus" />
+                            <p:menuitem value="Completed Questionnaires" icon="fa fa-flag-checkered" outcome="completedQuestionnaires" />
+                        </p:submenu>
+                    </p:panelMenu>
+                        <p:panelMenu>
+                            <p:submenu label="Dashboards" icon="ui-icon-home">
+                                <p:menuitem value="Overall" icon="fa fa-tachometer" outcome="Overall"  />
+                                <p:menuitem value="Findings" icon="fa fa-database" outcome="showFindings" />
+                            </p:submenu>
+                        </p:panelMenu>
+                        <p:panelMenu>
+                            <p:submenu label="Reports">
+                               <p:menuitem value="Assessment Reports" icon="fa fa-newspaper-o" outcome="findingReports"/>
+                        </p:submenu>
+                        </p:panelMenu>
+                        <p:panelMenu>
+                            <p:submenu  label="Administration">
+                                <p:menuitem value="Registrations" icon="fa fa-cogs" action="#{administratorbean.processRegistrationManagementClick()}" />
+                                <p:menuitem value="Vendors" icon="fa fa-cloud" outcome="managevendor" />
+                                 <p:menuitem value="Assessment Questions" icon="fa fa-question-circle-o" outcome="AssessmentQuestions"/>
+                                 <p:menuitem value="Question Category Weightings" icon="fa fa-anchor" outcome="CategoryWeights"/>
+                                 <p:menuitem value="User Administration" icon="fa fa-user" outcome="administration-users"/>
+                            </p:submenu>
+                            
+                            
+                        </p:panelMenu>
+            </p:layoutUnit>
+
+   <p:layoutUnit position="center">
+       <p:dataTable id="completedAssessmentDT" var="closed" value="#{completedQ.mainlist}" selectionMode="single" selection="#{completedQ.selectedCloudAssessment}" rowKey="#{closed.cloudAssessmentId}" tableStyle="width:auto">
+           <f:facet name="header">
+               Completed Assessments
+           </f:facet>
+           <p:ajax event="rowSelect" listener="#{completedQ.onRowSelect}" update=":frm:message"/>
+           <p:ajax event="rowUnselect" listener="#{completedQ.onRowUnselect}" update=":frm:message"/>
+           <p:column headerText="id">
+               <h:outputText value="#{closed.cloudAssessmentId}"/>
+           </p:column>
+           <p:column headerText="Vendor Name">
+               <h:outputText value="#{closed.vendorName}"/>
+           </p:column>
+           <p:column headerText="Start Date">
+               <h:outputText value="#{closed.startDate}"/>
+           </p:column>
+           <p:column headerText="End Date">
+               <h:outputText value="#{closed.endDate}"/>
+           </p:column>
+           <p:column headerText="Cloud Type">
+               <h:outputText value="#{closed.cloudType}"/>
+           </p:column>
+       </p:dataTable>
+
+
+
+
+
+
+
+
+
+   </p:layoutUnit>
+</p:layout>
+      </h:form>
+    </body>
+</html>
+

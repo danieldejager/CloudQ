@@ -1,0 +1,127 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+       xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:pe="http://primefaces.org/ui/extensions">
+<h:head>
+     <title>TI InfoSec Cloud Questionnaire</title>
+</h:head>
+<body>
+<h:form id="frm">
+    <p:growl id="message"/>
+<p:layout style="min-width:1000px;min-height:200px;" fullPage="true">
+                <p:layoutUnit position="north" size="70"  >
+                      <h:graphicImage value="/images/disc_logo.PNG" width="170" height="50" />
+
+                </p:layoutUnit>
+                <p:layoutUnit position="west" resizable="false" size="300" minSize="40" maxSize="200">
+
+                       <p:splitButton value ="Hello #{administratorbean.user}">
+                           <p:menuitem value="Change Password"/>
+                           <p:menuitem value="Log Out" action="#{loginbean.logout()}"/>
+                       </p:splitButton>
+                        <br/>
+                    <p:spacer height="5"></p:spacer>
+                        <p:panelMenu>
+                        <p:submenu label="Evaluations">
+                            <p:menuitem value="Questionnare Status" icon="fa fa-american-sign-language-interpreting" outcome="AssessmentStatus" />
+                            <p:menuitem value="Completed Questionnaires" icon="fa fa-flag-checkered" outcome="completedQuestionnaires"/>
+                        </p:submenu>
+                    </p:panelMenu>
+                        <p:panelMenu>
+                            <p:submenu label="Dashboards" icon="ui-icon-home">
+                                <p:menuitem value="Overall" icon="fa fa-tachometer" outcome="Overall" />
+                                <p:menuitem value="Findings" icon="fa fa-database" outcome="showFindings" />
+                            </p:submenu>
+                        </p:panelMenu>
+                        <p:panelMenu>
+                            <p:submenu label="Reports">
+                                <p:menuitem value="Assessment Reports" icon="fa fa-newspaper-o" outcome="findingReports"/>
+                        </p:submenu>
+                        </p:panelMenu>
+                        <p:panelMenu>
+                            <p:submenu  label="Administration">
+                                <p:menuitem value="Registrations" icon="fa fa-cogs" action="#{administratorbean.processRegistrationManagementClick()}" />
+                                <p:menuitem value="Vendors" icon="fa fa-cloud" outcome="managevendor" />
+                                 <p:menuitem value="Assessment Questions" icon="fa fa-question-circle-o" outcome="AssessmentQuestions"/>
+                                 <p:menuitem value="Question Category Weightings" icon="fa fa-anchor" outcome="CategoryWeights"/>
+                                 <p:menuitem value="User Administration" icon="fa fa-user" outcome="administration-users"/>
+                            </p:submenu>
+                            
+                            
+                        </p:panelMenu>
+            </p:layoutUnit>
+
+   <p:layoutUnit position="center">
+       <p:dataTable editable="true" var="registration" value="#{registrationadminbean.list}" tableStyle="width:auto" >
+           
+           <p:ajax event="rowEdit" listener="#{registrationadminbean.onRowEdit}" update=":frm:message"/>
+           <p:ajax event="rowEditCancel" listener="#{registrationadminbean.onRowCancel}" update=":frm:message" />
+           
+           <p:column headerText ="Id">
+               <h:outputText value="#{registration.registrationID}"/>
+           </p:column>
+           
+           <p:column headerText="First Name" >
+                   <h:outputText value="#{registration.firstName}"/>
+           </p:column>
+           
+           <p:column headerText="Last Name">
+                   <h:outputText value="#{registration.lastName}"/>
+           </p:column>
+           
+           <p:column headerText="Company Name">
+               <h:outputText value="#{registration.companyName}"/>
+           </p:column>
+           
+           <p:column headerText ="Email">
+                       <h:outputText value="#{registration.email}"/>
+           </p:column>
+           
+           <p:column headerText="Contact Number">
+                       <h:outputText value="#{registration.mobile}"/>
+           </p:column>
+           
+           <p:column headerText="Registration Status">
+               <p:cellEditor>
+                   <f:facet name="output">
+                    <h:outputText value="#{registration.registrationstatus}"/>
+                   </f:facet>
+                   <f:facet name="input">
+                       <h:selectOneMenu value="#{registrationadminbean.regstatus}">
+                           <f:selectItem itemLabel="Pending" itemValue="Pending"></f:selectItem>
+                           <f:selectItem itemLabel="Registered" itemValue="Registered"></f:selectItem>
+                           <f:selectItem itemLabel="Decline" itemValue="Decline"></f:selectItem>
+                       </h:selectOneMenu>
+                   </f:facet>
+               </p:cellEditor>
+           </p:column>
+           
+           <p:column headerText="Assign Questionnaire">
+               <p:cellEditor>
+                   <f:facet name="output">
+                       <h:outputText value="#{registration.assignRegistration}"/>
+                   </f:facet>
+                   <f:facet name="input">
+                       <h:selectOneMenu value="#{registrationadminbean.assignregistration}">
+                           <f:selectItem itemLabel="Standard Cloud" itemValue="Standard Cloud"></f:selectItem>
+                       </h:selectOneMenu>
+                   </f:facet>
+               </p:cellEditor>
+           </p:column>
+           
+           
+           <p:column headerText="Edit">
+               <p:rowEditor/>
+           </p:column>
+           
+       </p:dataTable>
+       
+
+</p:layoutUnit>
+</p:layout>
+</h:form>
+</body>
+</html>

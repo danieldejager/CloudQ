@@ -1,0 +1,146 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+     <title>Assessment Status</title>
+</h:head>
+<body>
+<h:form>
+<p:growl id="growl" sticky="true" showDetail="true" life="3000" />
+<p:layout style="min-width:1000px;min-height:200px;" fullPage="true">
+                <p:layoutUnit position="north" size="70"  >
+                      <h:graphicImage value="/images/disc_logo.PNG" width="170" height="50" />
+                </p:layoutUnit>
+                <p:layoutUnit position="west" resizable="false" size="300" minSize="40" maxSize="200">
+                     <p:splitButton value ="Hello #{administratorbean.user}">
+                         <p:menuitem value="Change Password" action="#{loginbean.processChangePassword()}" />
+                           <p:menuitem value="Log Out" action="${loginbean.logout()}" />
+                       </p:splitButton><br/>
+                    <p:spacer height="5"></p:spacer>
+                    <p:panelMenu>
+                        <p:submenu label="Evualuations">
+                            <p:menuitem value="Questionnare Status" icon="fa fa-american-sign-language-interpreting" />
+                            <p:menuitem value="Completed Questionnaires" icon="fa fa-flag-checkered" outcome="completedQuestionnaires"/>
+                        </p:submenu>
+                    </p:panelMenu>
+                        <p:panelMenu>
+                            <p:submenu label="Dashboards" icon="ui-icon-home">
+                                <p:menuitem value="Overall" icon="fa fa-tachometer" outcome="Overall"  />
+                                <p:menuitem value="Findings" icon="fa fa-database" outcome="showFindings" />
+                            </p:submenu>
+                        </p:panelMenu>
+                        <p:panelMenu>
+                            <p:submenu label="Reports">
+                               <p:menuitem value="Assessment Reports" icon="fa fa-newspaper-o" outcome="findingReports"/>
+                        </p:submenu>
+                        </p:panelMenu>
+                        <p:panelMenu>
+                            <p:submenu  label="Administration">
+                                <p:menuitem value="Registrations" icon="fa fa-cogs" action="#{administratorbean.processRegistrationManagementClick()}" />
+                                <p:menuitem value="Vendors" icon="fa fa-cloud" outcome="managevendor" />
+                                 <p:menuitem value="Assessment Questions" icon="fa fa-question-circle-o" outcome="AssessmentQuestions"/>
+                                 <p:menuitem value="Question Category Weightings" icon="fa fa-anchor" outcome="CategoryWeights"/>
+                                 <p:menuitem value="User Administration" icon="fa fa-user" outcome="administration-users"/>
+                            </p:submenu>
+                            
+                            
+                        </p:panelMenu>
+            </p:layoutUnit>
+
+   <p:layoutUnit position="center">
+       <f:facet name="header">
+           High Level Response
+       </f:facet>
+       <p:panelGrid columns="2">
+           <p:outputLabel value="Vendor Information provided : "/>
+           <p:outputLabel value="#{internalAssessmentBean.questionnaire.vendorinformation}"/>
+           
+           <p:outputLabel value="Justification provided: "/>
+           <p:outputLabel value="#{internalAssessmentBean.questionnaire.justification}"/>
+           
+           <p:outputLabel value="Is an NDA in place : "/>
+           <p:outputLabel value="#{internalAssessmentBean.questionnaire.NDA}"/>
+           
+           <p:outputLabel value="Architecture Diagrams and Data Flow : "/>
+            
+           <p:commandButton ajax="false" value="pdf" icon="ui-icon-document" onclick="Primefaces.monitorDownload(start,stop)">
+               <p:fileDownload value="#{internalAssessmentBean.fileName}"/>
+           </p:commandButton>
+       </p:panelGrid>
+       
+       
+           
+       <p:dataTable var="ass" id="dtAssessment" value="#{internalAssessmentBean.data}" tableStyle="width:auto">
+               <f:facet name="Header">
+                   Perform Internal Assessment
+               </f:facet>
+           <p:column headerText="Question">
+               <p:outputLabel value="#{ass.question}"/>
+           </p:column> 
+           <p:column headerText="Answer">
+               <p:outputLabel value="#{ass.answer}"/>
+           </p:column>
+           
+           <p:column headerText="Elaboration">
+               <p:outputLabel   value="#{ass.elaboration}"/>
+           </p:column>
+           <p:column headerText="Evidence">
+               
+             
+               
+               
+               <p:commandButton actionListener="#{internalAssessmentBean.handleFileClick(ass.evidencelink)}" rendered="#{ass.evidencelink ne null}"  ajax="false" value="pdf" icon="ui-icon-document" onclick="Primefaces.monitorDownload(start,stop)">
+                   <p:fileDownload value="#{internalAssessmentBean.filetoDownload}"/>
+           </p:commandButton>
+           </p:column>
+           
+          
+           </p:dataTable>
+       <p:commandButton value="Add Finding" onclick="PF('dlg').show();"/>
+           <p:dialog modal="false" header="Add Finding" widgetVar="dlg" resizable="false">
+               <h:panelGrid columns="2" cellpadding="5">
+                   <h:outputLabel for="category" value="Category:"/>
+                   <p:selectOneMenu id="category" value="#{internalAssessmentBean.finding.category}">
+                       <f:selectItems value="#{internalAssessmentBean.shortcats}"/>
+                   </p:selectOneMenu>
+                   
+                   <h:outputLabel for="description" value="Description:"/>
+                   <h:inputTextarea rows="5" cols="50" value="#{internalAssessmentBean.finding.findingText}"/>
+                   
+                   <h:outputLabel for="severity" value="Severity:"/>
+                   <p:selectOneMenu id="severity" value="#{internalAssessmentBean.finding.severity}">
+                       <f:selectItem itemLabel="Critical" itemValue="Critical"/>
+                       <f:selectItem itemLabel="High" itemValue="High"/>
+                       <f:selectItem itemLabel="Medium" itemValue="Medium"/>
+                       <f:selectItem itemLabel="Low" itemValue="Low"/>
+                   </p:selectOneMenu>
+                   <p:commandButton value="Commit Finding" actionListener="#{internalAssessmentBean.AddFinding}" oncomplete="handleLoginRequest(xhr, status, args)" />
+               </h:panelGrid>
+           </p:dialog>
+       <p:commandButton value="Close Assessment" actionListener="#{internalAssessmentBean.closeOutCurrentAssessment}"/>
+   </p:layoutUnit>
+</p:layout>
+      </h:form>
+       <script type="text/javascript">
+    function handleLoginRequest(xhr, status, args) {
+        if(args.validationFailed || !args.loggedIn) {
+            PF('dlg').jq.effect("shake", {times:5}, 100);
+        }
+        else {
+            PF('dlg').hide();
+            $('#loginLink').fadeOut();
+        }
+    }
+    
+
+ 
+
+    
+</script>
+   
+    </body>
+</html>

@@ -1,0 +1,164 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+     <title>TI InfoSec Cloud Questionnaire</title>
+     
+</h:head>
+<body>
+<h:form>
+<p:growl id="message"/>
+<p:layout style="min-width:1000px;min-height:200px;" fullPage="true">
+                <p:layoutUnit position="north" size="70"  >
+                      <h:graphicImage value="/images/disc_logo.PNG" width="170" height="50" />
+
+                </p:layoutUnit>
+                <p:layoutUnit position="west" resizable="false" size="300" minSize="40" maxSize="200">
+                     <p:splitButton value ="Hello #{administratorbean.user}">
+                         <p:menuitem value="Change Password" action="#{loginbean.processChangePassword()}" />
+                           <p:menuitem value="Log Out" action="${loginbean.logout()}" />
+                       </p:splitButton><br/>
+                    <p:spacer height="5"></p:spacer>
+                    <p:panelMenu>
+                        <p:submenu label="Evaluations">
+                            <p:menuitem value="Questionnare Status" icon="fa fa-american-sign-language-interpreting" outcome="AssessmentStatus" />
+                            <p:menuitem value="Completed Questionnaires" icon="fa fa-flag-checkered" outcome="completedQuestionnaires"/>
+                        </p:submenu>
+                    </p:panelMenu>
+                        <p:panelMenu>
+                            <p:submenu label="Dashboards" icon="ui-icon-home">
+                                <p:menuitem value="Overall" icon="fa fa-tachometer" outcome="Overall" />
+                                <p:menuitem value="Findings" icon="fa fa-database" outcome="showFindings" />
+                            </p:submenu>
+                        </p:panelMenu>
+                        <p:panelMenu>
+                            <p:submenu label="Reports">
+                               <p:menuitem value="Assessment Reports" icon="fa fa-newspaper-o" outcome="findingReports"/>
+                        </p:submenu>
+                        </p:panelMenu>
+                        <p:panelMenu>
+                            <p:submenu  label="Administration">
+                                <p:menuitem value="Registrations" icon="fa fa-cogs" action="#{administratorbean.processRegistrationManagementClick()}" />
+                                <p:menuitem value="Vendors" icon="fa fa-cloud" outcome="managevendor" />
+                                 <p:menuitem value="Assessment Questions" icon="fa fa-question-circle-o" outcome="AssessmentQuestions"/>
+                                 <p:menuitem value="Question Category Weightings" icon="fa fa-anchor" outcome="CategoryWeights"/>
+                                 <p:menuitem value="User Administration" icon="fa fa-user" outcome="administration-users"/>
+                            </p:submenu>
+                            
+                            
+                        </p:panelMenu>
+            </p:layoutUnit>
+
+   <p:layoutUnit position="center">
+       
+       <p:panel header="Overview" toggleOrientation="vertical" toggleable="true">
+        <div id="jack" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+       </p:panel>
+       <script type="text/javascript" src="http://code.highcharts.com/highcharts.js"></script>
+     <script type="text/javascript" src="http://code.highcharts.com/modules/exporting.js"></script> 
+       <script type="text/javascript">
+       Highcharts.chart('jack', {
+    chart: {
+        type: 'column'
+    },
+    title: {
+        text: 'Overall Findings'
+    },
+    subtitle: {
+        text: 'Category Breakdown'
+    },
+    xAxis: {
+        categories: [
+            'Juristiction',
+            'Policy',
+            'Confidentiality',
+            'Availability',
+            'Resillience',
+            'Authentication',
+            'Secure Design',
+            'Frameworks',
+            'Auditing',
+            'Disaster Recovery'
+        ],
+        crosshair: true
+    },
+    yAxis: {
+        min: 0,
+        title: {
+            text: 'Findings Count'
+        }
+    },
+    tooltip: {
+        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+            '<td style="padding:0"><b>{point.y:.1f} </b></td></tr>',
+        footerFormat: '</table>',
+        shared: true,
+        useHTML: true
+    },
+    plotOptions: {
+        column: {
+            pointPadding: 0.2,
+            borderWidth: 0
+        }
+    },
+    series: [{
+        name: 'Critical',
+        data: [#{findingsBean.jur_C}, #{findingsBean.pol_C}, #{findingsBean.conf_C}, #{findingsBean.avail_C}, #{findingsBean.res_C}, #{findingsBean.auth_C}, #{findingsBean.secd_C}, #{findingsBean.fram_C}, #{findingsBean.aud_C}, #{findingsBean.disas_C}]
+
+    }, {
+        name: 'High',
+        data: [#{findingsBean.jur_H}, #{findingsBean.pol_H}, #{findingsBean.conf_H}, #{findingsBean.avail_H}, #{findingsBean.res_H}, #{findingsBean.auth_H}, #{findingsBean.secd_H}, #{findingsBean.fram_H}, #{findingsBean.aud_H}, #{findingsBean.disas_H}]
+
+    }, {
+        name: 'Medium',
+        data: [#{findingsBean.jur_M}, #{findingsBean.pol_M}, #{findingsBean.conf_M}, #{findingsBean.avail_M}, #{findingsBean.res_M}, #{findingsBean.auth_M}, #{findingsBean.secd_M}, #{findingsBean.fram_M}, #{findingsBean.aud_M}, #{findingsBean.disas_M}]
+
+    }, {
+        name: 'Low',
+        data: [#{findingsBean.jur_L}, #{findingsBean.pol_L}, #{findingsBean.conf_L}, #{findingsBean.avail_L}, #{findingsBean.res_L},#{findingsBean.auth_L}, #{findingsBean.secd_L}, #{findingsBean.fram_L}, #{findingsBean.aud_L}, #{findingsBean.disas_L}]
+       }]
+ });
+       </script>
+       <p:panel header="Finding Data" toggleOrientation="vertical" toggleable="true">
+      <p:dataTable rows="10" paginator="true" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} "   id="dtFindings" var="findings" value="#{findingsBean.mainlist}" filteredValue="#{findingsBean.filteredList}" widgetVar="findingsWidget" tableStyle="width:auto"  >
+           <p:column headerText="id" filterBy="#{findings.findingId}" filterMatchMode="contains">
+               <h:outputText value="#{findings.findingId}"/>
+           </p:column>
+           
+           <p:column headerText="Finding Severity" filterBy="#{findings.severity}" filterMatchMode="exact">
+               <h:outputText value="#{findings.severity}"/>
+           </p:column>
+           
+           <p:column headerText="Question Category" filterBy="#{findings.category}" filterMatchMode="contains">
+               <h:outputText value="#{findings.category}"/>
+           </p:column>
+           
+           <p:column headerText="Assessment Id" filterBy="#{findings.cloudAssessmentId}" filterMatchMode="exact">
+               <h:outputText value="#{findings.cloudAssessmentId}"/>
+           </p:column>
+           
+           <p:column headerText="Finding Result">
+               <h:outputText value="#{findings.findingText}"/>
+           </p:column>
+       </p:dataTable>
+       </p:panel>
+      
+      
+ 
+       
+
+
+
+
+   </p:layoutUnit>
+</p:layout>
+      </h:form>
+    
+
+    </body>
+</html>
